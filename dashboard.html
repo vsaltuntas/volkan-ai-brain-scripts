@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Volkan Universal AI Brain</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+.sidebar{position:fixed;left:0;top:0;width:260px;height:100%;background:#1e293b;border-right:1px solid #334155;z-index:100;display:flex;flex-direction:column}
+.sidebar-header{padding:24px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #334155}
+.logo{width:42px;height:42px;background:linear-gradient(135deg,#06b6d4,#3b82f6);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.sidebar-header h1{font-size:16px;font-weight:700;color:#f8fafc}
+.sidebar-header p{font-size:11px;color:#94a3b8}
+.nav{flex:1;padding:16px;list-style:none}
+.nav li{margin-bottom:4px}
+.nav button{width:100%;padding:12px 16px;border:none;border-radius:10px;background:transparent;color:#94a3b8;cursor:pointer;display:flex;align-items:center;gap:12px;font-size:14px;transition:all .2s;text-align:left}
+.nav button:hover{background:#334155;color:#e2e8f0}
+.nav button.active{background:#0891b2;color:#fff}
+.main{margin-left:260px;padding:32px}
+.header{margin-bottom:32px}
+.header h2{font-size:28px;font-weight:800;color:#f8fafc;margin-bottom:6px}
+.header p{color:#64748b;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;margin-bottom:32px}
+.card{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:24px;transition:all .2s}
+.card:hover{border-color:#475569;transform:translateY(-2px)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-icon{font-size:32px}
+.card-value{font-size:32px;font-weight:800;color:#f8fafc}
+.card-label{color:#64748b;font-size:14px}
+.section{background:#1e293b;border:1px solid #334155;border-radius:16px;padding:24px;margin-bottom:24px}
+.section h3{font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px;color:#f8fafc}
+.section h3 .icon{color:#06b6d4;font-size:20px}
+.service-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid #334155}
+.service-row:last-child{border-bottom:none}
+.service-name{color:#cbd5e1;font-size:14px}
+.service-status{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.status-online{color:#22c55e}
+.status-offline{color:#ef4444}
+.quick-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+.btn{padding:12px 24px;border:none;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:8px;transition:all .2s}
+.btn-primary{background:#0891b2;color:#fff}
+.btn-primary:hover{background:#0e7490}
+.btn-secondary{background:#334155;color:#e2e8f0}
+.btn-secondary:hover{background:#475569}
+.memory-form{display:flex;flex-direction:column;gap:16px;margin-bottom:24px}
+.memory-form textarea{width:100%;padding:16px;background:#0f172a;border:1px solid #334155;border-radius:12px;color:#e2e8f0;font-size:14px;resize:vertical;min-height:120px;font-family:inherit}
+.memory-form textarea:focus{outline:none;border-color:#0891b2}
+.form-row{display:flex;gap:12px;align-items:flex-start}
+.memory-form select{padding:12px 16px;background:#0f172a;border:1px solid #334155;border-radius:10px;color:#e2e8f0;font-size:14px;cursor:pointer}
+.search-box{position:relative;margin-bottom:20px}
+.search-box input{width:100%;padding:14px 20px 14px 48px;background:#0f172a;border:1px solid #334155;border-radius:12px;color:#e2e8f0;font-size:14px}
+.search-box input:focus{outline:none;border-color:#0891b2}
+.search-box .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:18px;color:#64748b}
+.memory-item{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:20px;margin-bottom:16px;transition:all .2s}
+.memory-item:hover{border-color:#475569}
+.memory-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.memory-tag{padding:4px 12px;background:rgba(8,145,178,.15);color:#22d3ee;border-radius:20px;font-size:12px;font-weight:600;text-transform:capitalize}
+.memory-source{color:#64748b;font-size:12px}
+.memory-content{color:#e2e8f0;font-size:14px;line-height:1.6;margin-bottom:12px}
+.memory-meta{display:flex;gap:16px;font-size:12px;color:#64748b}
+.delete-btn{background:none;border:none;color:#ef4444;cursor:pointer;font-size:18px;padding:4px;border-radius:6px;transition:all .2s}
+.delete-btn:hover{background:rgba(239,68,68,.1)}
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.agent-card{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:24px;transition:all .2s}
+.agent-card:hover{border-color:#0891b2}
+.agent-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.agent-icon{font-size:40px}
+.agent-status{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.agent-status.active{background:rgba(34,197,94,.15);color:#4ade80}
+.agent-status.inactive{background:rgba(100,116,139,.15);color:#94a3b8}
+.agent-name{font-size:16px;font-weight:700;margin-bottom:6px;color:#f8fafc}
+.agent-desc{color:#64748b;font-size:13px;margin-bottom:16px;line-height:1.5}
+.agent-meta{display:flex;justify-content:space-between;font-size:12px;color:#64748b}
+.mcp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.endpoint-box{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:20px}
+.endpoint-box h4{font-size:14px;font-weight:700;margin-bottom:12px;color:#f8fafc;display:flex;align-items:center;gap:8px}
+.endpoint-url{padding:12px;background:#020617;border-radius:8px;font-family:monospace;font-size:13px;color:#22d3ee;margin-bottom:12px;word-break:break-all}
+.systems-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px}
+.system-item{background:#0f172a;border:1px solid #334155;border-radius:10px;padding:16px;text-align:center}
+.system-icon{font-size:28px;margin-bottom:8px}
+.system-name{font-size:12px;font-weight:600;color:#f8fafc;margin-bottom:4px}
+.system-status{font-size:11px;color:#eab308}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+.tool-item{display:flex;align-items:center;gap:12px;padding:14px;background:#0f172a;border-radius:10px}
+.tool-icon{font-size:16px;color:#eab308}
+.tool-name{font-family:monospace;font-size:13px;color:#22d3ee;font-weight:600}
+.tool-desc{font-size:12px;color:#64748b}
+.tab-content{display:none}
+.tab-content.active{display:block}
+.notification{position:fixed;top:20px;right:20px;background:#0891b2;color:#fff;padding:14px 24px;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.3);z-index:1000;font-weight:600;display:none}
+.sidebar-footer{position:absolute;bottom:0;left:0;right:0;padding:20px;border-top:1px solid #334155}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:8px}
+.status-dot.online{background:#22c55e;box-shadow:0 0 6px #22c55e}
+.status-dot.offline{background:#ef4444}
+.status-row{display:flex;align-items:center;margin-bottom:8px;font-size:13px;color:#94a3b8}
+.empty-state{text-align:center;padding:60px 20px;color:#475569}
+.empty-state .icon{font-size:64px;margin-bottom:16px;display:block}
+.loading-screen{position:fixed;inset:0;background:#0f172a;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000}
+.loading-spinner{width:50px;height:50px;border:3px solid #334155;border-top-color:#06b6d4;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:16px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-screen p{color:#64748b;font-size:16px}
+</style>
+</head>
+<body>
+<div class="loading-screen" id="loading"><div class="loading-spinner"></div><p>Yukleniyor...</p></div>
+<div class="notification" id="notif"></div>
+<div class="sidebar">
+<div class="sidebar-header"><div class="logo">&#x1F9E0;</div><div><h1>Universal AI Brain</h1><p>Volkan v2.0</p></div></div>
+<ul class="nav">
+<li><button class="active" onclick="tab('dashboard')" id="b-dashboard">&#x1F4CA; Dashboard</button></li>
+<li><button onclick="tab('memories')" id="b-memories">&#x1F5C4; Hafizalar</button></li>
+<li><button onclick="tab('agents')" id="b-agents">&#x1F916; Agentler</button></li>
+<li><button onclick="tab('mcp')" id="b-mcp">&#x1F50C; MCP</button></li>
+</ul>
+<div class="sidebar-footer">
+<div class="status-row"><span class="status-dot online" id="dot-api"></span><span id="txt-api">API: Yukleniyor...</span></div>
+<div class="status-row"><span class="status-dot online" id="dot-mcp"></span><span id="txt-mcp">MCP: Yukleniyor...</span></div>
+</div>
+</div>
+<div class="main">
+<div class="tab-content active" id="t-dashboard">
+<div class="header"><h2>Dashboard</h2><p>Universal AI Brain sisteminizin genel durumu</p></div>
+<div class="cards">
+<div class="card"><div class="card-header"><span class="card-icon">&#x1F5C4;</span><span class="card-value" id="s-mem">-</span></div><div class="card-label">Toplam Hafiza</div></div>
+<div class="card"><div class="card-header"><span class="card-icon">&#x1F916;</span><span class="card-value" id="s-age">-</span></div><div class="card-label">AI Agenti</div></div>
+<div class="card"><div class="card-header"><span class="card-icon">&#x1F4AC;</span><span class="card-value" id="s-msg">-</span></div><div class="card-label">Mesajlar</div></div>
+<div class="card"><div class="card-header"><span class="card-icon">&#x23F1;</span><span class="card-value" id="s-up">-</span></div><div class="card-label">Calisma Suresi</div></div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:20px">
+<div class="section"><h3><span class="icon">&#x1F6E1;</span>Servis Durumu</h3><div id="svc"></div></div>
+<div class="section"><h3><span class="icon">&#x26A1;</span>Sistem Bilgisi</h3>
+<div class="service-row"><span class="service-name">Versiyon</span><span class="service-status" id="v-ver">-</span></div>
+<div class="service-row"><span class="service-name">Durum</span><span class="service-status status-online" id="v-st">-</span></div>
+<div class="service-row"><span class="service-name">Son Kontrol</span><span class="service-status" id="v-time">-</span></div>
+<div class="service-row"><span class="service-name">PostgreSQL</span><span class="service-status" id="v-pg">-</span></div>
+<div class="service-row"><span class="service-name">Redis</span><span class="service-status" id="v-rd">-</span></div>
+</div>
+</div>
+<div class="section"><h3><span class="icon">&#x1F680;</span>Hizli Islemler</h3><div class="quick-actions">
+<button class="btn btn-primary" onclick="tab('memories')">&#x2795; Yeni Hafiza Ekle</button>
+<button class="btn btn-secondary" onclick="load()">&#x1F504; Yenile</button>
+</div></div>
+</div>
+<div class="tab-content" id="t-memories">
+<div class="header"><h2>Hafizalar</h2><p>Tum AI sistemlerinizin hafizalarini yonetin</p></div>
+<div class="section"><h3>Yeni Hafiza Ekle</h3><div class="memory-form">
+<textarea id="m-cont" placeholder="Hafiza icerigini buraya yazin..."></textarea>
+<div class="form-row"><select id="m-cat"><option value="general">Genel</option><option value="conversation">Konusma</option><option value="knowledge">Bilgi</option><option value="task">Gorev</option><option value="preference">Tercih</option><option value="person">Kisi</option></select>
+<button class="btn btn-primary" onclick="addM()">&#x2795; Ekle</button></div>
+</div></div>
+<div class="search-box"><span class="search-icon">&#x1F50D;</span><input type="text" id="m-search" placeholder="Hafiza ara..." onkeypress="if(event.key==='Enter')srcM()"></div>
+<div id="m-list"></div>
+</div>
+<div class="tab-content" id="t-agents">
+<div class="header"><h2>AI Agentleri</h2><p>Sisteme bagli AI sistemleri ve agentler</p></div>
+<div class="agent-grid" id="a-list"></div>
+</div>
+<div class="tab-content" id="t-mcp">
+<div class="header"><h2>MCP Baglantilari</h2><p>Model Context Protocol baglanti noktalari</p></div>
+<div class="mcp-grid">
+<div class="endpoint-box"><h4>&#x1F50C; MCP Server Endpoint</h4><div class="endpoint-url">http://localhost:3002/sse</div><p style="font-size:13px;color:#64748b">Tum AI sistemleriniz bu adrese SSE ile baglanir.</p></div>
+<div class="endpoint-box"><h4>&#x1F310; API Endpoint</h4><div class="endpoint-url">http://localhost:8081/api/v1</div><p style="font-size:13px;color:#64748b">REST API uzerinden hafiza yonetimi.</p></div>
+</div>
+<div class="section" style="margin-top:24px"><h3><span class="icon">&#x1F5A5;</span>Bagli AI Sistemleri</h3>
+<div class="systems-grid">
+<div class="system-item"><div class="system-icon">&#x1F4BB;</div><div class="system-name">Codex (OpenAI)</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x1F5A5;</div><div class="system-name">Zo.computer</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x1F319;</div><div class="system-name">Kimi</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x1F916;</div><div class="system-name">Claude</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x2728;</div><div class="system-name">Gemini</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x1F3E0;</div><div class="system-name">Ollama</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x2705;</div><div class="system-name">Taskade</div><div class="system-status">Beklemede</div></div>
+<div class="system-item"><div class="system-icon">&#x1F4E1;</div><div class="system-name">Hermes</div><div class="system-status">Beklemede</div></div>
+</div></div>
+<div class="section"><h3><span class="icon">&#x1F9F0;</span>MCP Aletleri (Tools)</h3><div class="tools-grid">
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">memory_add</div><div class="tool-desc">Yeni hafiza kaydi ekle</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">memory_search</div><div class="tool-desc">Semantik hafiza arama</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">memory_get</div><div class="tool-desc">Hafiza detaylarini getir</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">memory_update</div><div class="tool-desc">Hafiza guncelle</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">memory_delete</div><div class="tool-desc">Hafiza sil</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">conversation_start</div><div class="tool-desc">Yeni konusma baslat</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">conversation_message</div><div class="tool-desc">Konusmaya mesaj ekle</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">system_status</div><div class="tool-desc">Sistem durumunu kontrol et</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">agent_register</div><div class="tool-desc">Yeni agent kaydet</div></div></div>
+<div class="tool-item"><span class="tool-icon">&#x26A1;</span><div><div class="tool-name">knowledge_query</div><div class="tool-desc">Bilgi tabani sorgula</div></div></div>
+</div></div>
+</div>
+</div>
+<script>
+const API='/api/v1';
+function showN(msg){var n=document.getElementById('notif');n.textContent=msg;n.style.display='block';setTimeout(function(){n.style.display='none'},3000)}
+function tab(t){document.querySelectorAll('.tab-content').forEach(function(x){x.classList.remove('active')});document.querySelectorAll('.nav button').forEach(function(x){x.classList.remove('active')});document.getElementById('t-'+t).classList.add('active');document.getElementById('b-'+t).classList.add('active');if(t==='memories')loadM();if(t==='agents')loadA()}
+async function api(p,o){try{var r=await fetch(API+p,o);if(!r.ok)return null;return await r.json()}catch(e){return null}}
+async function load(){var h=await api('/system/health');if(!h)return;document.getElementById('v-ver').textContent=h.version||'1.0';document.getElementById('v-st').textContent=h.status||'?';document.getElementById('v-time').textContent=h.timestamp?new Date(h.timestamp).toLocaleTimeString('tr-TR'):'-';document.getElementById('v-pg').textContent=h.services?.database?'Bagli':'Yok';document.getElementById('v-rd').textContent=h.services?.redis?'Bagli':'Yok';var sv=[{n:'PostgreSQL Database',k:'database'},{n:'Redis Cache',k:'redis'},{n:'API Server (8081)',k:'api'},{n:'MCP Server (3002)',k:'mcp'}];document.getElementById('svc').innerHTML=sv.map(function(s){return '<div class="service-row"><span class="service-name">'+s.n+'</span><span class="service-status '+(h.services?.[s.k]?'status-online':'status-offline')+'">'+(h.services?.[s.k]?'Aktif':'Kapali')+'</span></div>'}).join('');document.getElementById('dot-api').className='status-dot '+(h.services?.api?'online':'offline');document.getElementById('txt-api').textContent='API '+(h.services?.api?'Aktif':'Kapali');document.getElementById('dot-mcp').className='status-dot '+(h.services?.mcp?'online':'offline');document.getElementById('txt-mcp').textContent='MCP '+(h.services?.mcp?'Aktif':'Kapali');var st=await api('/system/stats');if(st){document.getElementById('s-mem').textContent=st.totalMemories??'-';document.getElementById('s-age').textContent=st.totalAgents??'-';document.getElementById('s-msg').textContent=st.totalMessages??'-';document.getElementById('s-up').textContent=st.uptime||'-'}}
+async function loadA(){var d=await api('/agents');var el=document.getElementById('a-list');var a=d?.agents||[];el.innerHTML=a.length?a.map(function(x){return '<div class="agent-card"><div class="agent-header"><span class="agent-icon">&#x1F916;</span><span class="agent-status '+x.status+'">'+(x.status==='active'?'Aktif':'Pasif')+'</span></div><div class="agent-name">'+x.name+'</div><div class="agent-desc">'+(x.description||'')+'</div><div class="agent-meta"><span>Hafiza: '+(x.memoryCount||0)+'</span><span>'+(x.lastUsed?new Date(x.lastUsed).toLocaleDateString('tr-TR'):'Hic')+'</span></div></div>'}).join(''):'<div class="empty-state" style="grid-column:1/-1"><span class="icon">&#x1F916;</span><p>Heniz agent bulunmuyor.</p></div>'}
+async function loadM(){var d=await api('/memories?limit=50');var el=document.getElementById('m-list');var m=d?.memories||[];el.innerHTML=m.length?m.map(function(x){return '<div class="memory-item"><div class="memory-header"><div style="display:flex;gap:12px;align-items:center"><span class="memory-tag">'+x.category+'</span><span class="memory-source">'+x.source+'</span></div><button class="delete-btn" onclick="delM(\''+x.id+'\')">&#x1F5D1;</button></div><div class="memory-content">'+x.content+'</div><div class="memory-meta"><span>Guven: '+Math.round((x.confidence||0)*100)+'%</span><span>'+(x.createdAt?new Date(x.createdAt).toLocaleString('tr-TR'):'-')+'</span></div></div>'}).join(''):'<div class="empty-state"><span class="icon">&#x1F5C4;</span><p>Heniz hafiza bulunmuyor.</p></div>'}
+async function addM(){var c=document.getElementById('m-cont').value.trim();if(!c)return;var cat=document.getElementById('m-cat').value;await api('/memories',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({content:c,category:cat,source:'dashboard',tags:[cat]})});document.getElementById('m-cont').value='';loadM();load()}
+async function delM(id){await api('/memories/'+id,{method:'DELETE'});loadM();load()}
+async function srcM(){var q=document.getElementById('m-search').value.trim();if(!q){loadM();return}var d=await api('/memories/search?q='+encodeURIComponent(q));var m=d?.results||[];document.getElementById('m-list').innerHTML=m.length?m.map(function(x){return '<div class="memory-item"><div style="display:flex;gap:12px;align-items:center;margin-bottom:8px"><span class="memory-tag">'+x.category+'</span></div><div class="memory-content">'+x.content+'</div></div>'}).join(''):'<div class="empty-state"><span class="icon">&#x1F50D;</span><p>Sonuc bulunamadi.</p></div>'}
+window.onload=async function(){await load();await loadA();document.getElementById('loading').style.display='none';setInterval(load,10000)};
+</script>
+</body>
+</html>
